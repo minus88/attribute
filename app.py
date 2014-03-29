@@ -74,14 +74,85 @@ def listUsers():
 
 
 def getUser():
-    return json.dumps(example_connection)
+    
+    send_dict = {}
+    user = None
+    if 'username' in request.args:
+        username = (request.args['username'])
+        print username        
+        user = connect_to_database().user.find_one({'_id': username})
+        print user
+        if user is None:
+            send_dict['error'] = "requested username not found"
+            return json.dumps(send_dict)
+    else:
+        send_dict['error'] = "param:username is required"
+        return json.dumps(send_dict)    
+    
+    send_dict = {}
+    
+    print user
+    
+    send_dict['user'] = user
+    return json.dumps(send_dict)
+
+def is_diverse(list1,list2):
+    for single_x in list2:
+        if  single_x not in list1:
+            return True
+    return False
 
 
 
-def display_connection():
-    return json.dumps(example_connection)
 
 
+def add_connection():
+    send_dict = {}
+    single_user = None
+    if 'username' in request.args:
+        username = (request.args['username'])
+        print username        
+        single_user = connect_to_database().user.find_one({'_id': username})
+        print single_user
+        if single_user is None:
+            send_dict['error'] = "requested username not found"
+            return json.dumps(send_dict)
+    else:
+        send_dict['error'] = "param:username is required"
+        return json.dumps(send_dict)    
+
+    connection_username_single_user = None
+    if 'follow' in request.args:
+        username = (request.args['follow'])
+        print username        
+        connection_username_single_user = connect_to_database().user.find_one({'_id': username})
+        print connection_username_single_user
+        if connection_username_single_user is None:
+            send_dict['error'] = "requested username not found"
+            return json.dumps(send_dict)
+    else:
+        send_dict['error'] = "param:follow is required"
+        return json.dumps(send_dict)    
+    connection_username_single_user_temp = {}
+    connection_username_single_user_temp['_id'] = connection_username_single_user['_id']
+    connection_username_single_user_temp['name'] = connection_username_single_user['name']
+    connection_username_single_user_temp['age'] = connection_username_single_user['age']        
+    single_user['following'].append(connection_username_single_user_temp)    
+    connection_username_single_user['followers'].append(username)    
+    analyse_params = ['languages','department','industries','countries']    
+    for each_param in analyse_params:         
+        total_already  =  single_user['diversity'][each_param] * (single_user['total_following'])
+        single_user['avg_connection_age']  =  ((single_user['avg_connection_age'] * (single_user['total_following'])) + connection_username_single_user['age'])/(single_user['total_following'] + 1)         
+        if is_diverse(single_user[each_param],connection_username_single_user[each_param]):                
+            single_user['diversity'][each_param] = (total_already + 1)/(len(single_user['following']) + 1)
+        else:
+            single_user['diversity'][each_param] = (total_already)/(len(single_user['following']) + 1)                        
+    single_user['total_following'] += 1
+    connection_username_single_user['total_followers'] += 1    
+    connect_to_database().user.save(single_user)
+    connect_to_database().user.save(connection_username_single_user)
+    return json.dumps({'status':'success'})
+    
     
     
     

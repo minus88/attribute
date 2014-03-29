@@ -95,12 +95,11 @@ def populate_users():
 def add_connection(username,connection_username):
     
     single_user = connect_to_database().user.find_one({'_id': username})
-    connection_username_single_user = connect_to_database().user.find_one({'_id': connection_username})
-    connection_username_single_user_temp = connection_username_single_user
+    connection_username_single_user = connect_to_database().user.find_one({'_id': connection_username})    
     
     
     connection_username_single_user_temp = {}
-    connection_username_single_user_temp['_id'] = connection_username_single_user['_id']
+    connection_username_single_user_temp['usernmae'] = connection_username_single_user['_id']
     connection_username_single_user_temp['name'] = connection_username_single_user['name']
     connection_username_single_user_temp['age'] = connection_username_single_user['age']    
     

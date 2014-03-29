@@ -20,9 +20,10 @@ def getUser():
     return app.getUser()
 
 
-@server.route('/display')
-def display_connection():
-    return app.display_connection()
+@server.route('/followUser')
+def add_connection():
+    return app.add_connection()
+
 
 @server.route('/v1/health',methods = ['POST'])
 def health():
