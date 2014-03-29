@@ -77,11 +77,11 @@ def add_random_user():
 
 def populate_users():
     user_names = []    
-    for i in range(1,700):         
+    for i in range(1,125):         
         username = add_random_user()['_id']        
         user_names.append(username)    
     for each_user in user_names:
-        for i in range(1,random.randint(2,100)):
+        for i in range(1,random.randint(2,50)):
             to_connect = get_random(user_names)
             if to_connect == each_user:
                 continue        
@@ -99,7 +99,7 @@ def add_connection(username,connection_username):
     
     
     connection_username_single_user_temp = {}
-    connection_username_single_user_temp['usernmae'] = connection_username_single_user['_id']
+    connection_username_single_user_temp['username'] = connection_username_single_user['_id']
     connection_username_single_user_temp['name'] = connection_username_single_user['name']
     connection_username_single_user_temp['age'] = connection_username_single_user['age']    
     
